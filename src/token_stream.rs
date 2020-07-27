@@ -1,11 +1,13 @@
 use std::borrow::Cow;
 
+/// A stream of tokens
 #[derive(Debug, Clone)]
 pub struct TokenStream {
     inner: String,
 }
 
 impl TokenStream {
+    /// Create a new `TokenStream`
     pub fn new() -> Self {
         Self {
             inner: String::new(),
@@ -28,10 +30,12 @@ impl TokenStream {
         self.inner.push_str(&other.inner)
     }
 
+    /// View the stream as a string
     pub fn as_str(&self) -> &str {
         &self.inner
     }
 
+    /// Convert the stream into a `String`
     pub fn into_string(self) -> String {
         self.inner
     }
@@ -57,33 +61,42 @@ impl std::iter::FromIterator<TokenStream> for TokenStream {
     }
 }
 
+/// An identifier
 pub struct Ident {
     inner: Cow<'static, str>,
 }
 
 impl Ident {
+    // Create a new `Identifier`
     pub fn new<T: Into<Cow<'static, str>>>(str: T) -> Self {
         Self { inner: str.into() }
     }
 
+    /// View the identifier as a string
     pub fn as_str(&self) -> &str {
         &*self.inner
     }
 }
+
 impl std::fmt::Display for Ident {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", &*self.inner)
     }
 }
 
+/// A delimiter around a block of code
 #[derive(Copy, Clone)]
 pub enum Delimiter {
+    /// `[]`
     Bracket,
+    /// `{}`
     Brace,
+    /// `()`
     Parenthesis,
 }
 
 impl Delimiter {
+    /// The opening delimiter
     pub fn open(self) -> char {
         match self {
             Delimiter::Bracket => '[',
@@ -92,6 +105,7 @@ impl Delimiter {
         }
     }
 
+    /// The closing delimiter
     pub fn close(self) -> char {
         match self {
             Delimiter::Bracket => ']',
@@ -101,6 +115,7 @@ impl Delimiter {
     }
 }
 
+/// A literal of some sort
 pub struct Literal {
     inner: String,
 }
@@ -130,7 +145,9 @@ mod tests {
     use super::*;
     #[test]
     fn accept_owned_and_borrowed() {
-        let i = Ident::new("hello");
-        let i = Ident::new(String::from("hello"));
+        assert_eq!(
+            Ident::new("hello").as_str(),
+            Ident::new(String::from("hello")).as_str()
+        );
     }
 }

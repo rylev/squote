@@ -108,46 +108,7 @@
 /// ```
 #[macro_export]
 macro_rules! format_ident {
-    ($fmt:expr) => {
-        $crate::format_ident_impl!([
-            ::std::option::Option::None,
-            $fmt
-        ])
-    };
-
-    ($fmt:expr, $($rest:tt)*) => {
-        $crate::format_ident_impl!([
-            ::std::option::Option::None,
-            $fmt
-        ] $($rest)*)
-    };
-}
-
-#[macro_export]
-#[doc(hidden)]
-macro_rules! format_ident_impl {
-    // Final state
-    ([$span:expr, $($fmt:tt)*]) => {
-        $crate::__private::mk_ident(&format!($($fmt)*), $span)
-    };
-
-    // Named argument
-    ([$span:expr, $($fmt:tt)*] $name:ident = $arg:expr) => {
-        $crate::format_ident_impl!([$span, $($fmt)*] $name = $arg,)
-    };
-    ([$span:expr, $($fmt:tt)*] $name:ident = $arg:expr, $($rest:tt)*) => {
-        match $crate::__private::IdentFragmentAdapter(&$arg) {
-            arg => $crate::format_ident_impl!([$span.or(arg.span()), $($fmt)*, $name = arg] $($rest)*),
-        }
-    };
-
-    // Positional argument
-    ([$span:expr, $($fmt:tt)*] $arg:expr) => {
-        $crate::format_ident_impl!([$span, $($fmt)*] $arg,)
-    };
-    ([$span:expr, $($fmt:tt)*] $arg:expr, $($rest:tt)*) => {
-        match $crate::__private::IdentFragmentAdapter(&$arg) {
-            arg => $crate::format_ident_impl!([$span.or(arg.span()), $($fmt)*, arg] $($rest)*),
-        }
+    ($($fmt:tt)*) => {
+        $crate::Ident::new(format!($($fmt)*))
     };
 }

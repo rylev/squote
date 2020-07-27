@@ -90,7 +90,7 @@ mod token_stream;
 pub mod __private;
 
 pub use crate::to_tokens::ToTokens;
-pub use crate::token_stream::{Delimiter, Ident, TokenStream};
+pub use crate::token_stream::{Delimiter, Ident, Literal, TokenStream};
 
 /// The whole point.
 ///

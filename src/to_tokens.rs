@@ -1,7 +1,7 @@
 use std::borrow::Cow;
 use std::rc::Rc;
 
-use crate::{Ident, TokenStream};
+use crate::{Ident, Literal, TokenStream};
 
 /// Types that can be interpolated inside a `quote!` invocation.
 ///
@@ -185,11 +185,11 @@ impl ToTokens for Ident {
 //     }
 // }
 
-// impl ToTokens for Literal {
-//     fn to_tokens(&self, tokens: &mut TokenStream) {
-//         tokens.append(self.clone());
-//     }
-// }
+impl ToTokens for Literal {
+    fn to_tokens(&self, tokens: &mut TokenStream) {
+        tokens.push_str(self.as_str());
+    }
+}
 
 impl ToTokens for TokenStream {
     fn to_tokens(&self, dst: &mut TokenStream) {

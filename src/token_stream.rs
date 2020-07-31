@@ -18,7 +18,7 @@ impl TokenStream {
     ///
     /// note: a space will be inserted before the identifier
     pub fn append(&mut self, ident: Ident) {
-        self.inner.push(' ');
+        self.push_space();
         self.inner.push_str(ident.as_str())
     }
 
@@ -26,7 +26,7 @@ impl TokenStream {
     ///
     /// note: a space will be inserted before the other stream
     pub fn combine(&mut self, other: &TokenStream) {
-        self.inner.push(' ');
+        self.push_space();
         self.inner.push_str(&other.inner)
     }
 
@@ -40,12 +40,29 @@ impl TokenStream {
         self.inner
     }
 
+    /// Parse the token stream as something
+    ///
+    /// Mostly used with `proc_macro2::TokenStream` or `proc_macro::TokenStream`
+    pub fn parse<T: std::str::FromStr>(self) -> Result<T, T::Err> {
+        self.into_string().parse()
+    }
+
+    pub(crate) fn push_space(&mut self) {
+        if !matches!(self.last_char(), None | Some(' ')) {
+            self.inner.push(' ');
+        }
+    }
+
     pub(crate) fn push(&mut self, c: char) {
         self.inner.push(c)
     }
 
     pub(crate) fn push_str(&mut self, str: &str) {
         self.inner.push_str(str)
+    }
+
+    fn last_char(&self) -> Option<char> {
+        self.inner.chars().last()
     }
 }
 
@@ -62,6 +79,7 @@ impl std::iter::FromIterator<TokenStream> for TokenStream {
 }
 
 /// An identifier
+#[derive(Clone, Debug)]
 pub struct Ident {
     inner: Cow<'static, str>,
 }
@@ -80,7 +98,12 @@ impl Ident {
 
 impl std::fmt::Display for Ident {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", &*self.inner)
+        write!(f, "{}", self.as_str())
+    }
+}
+impl PartialEq<&str> for Ident {
+    fn eq(&self, other: &&str) -> bool {
+        self.as_str() == *other
     }
 }
 
@@ -149,5 +172,11 @@ mod tests {
             Ident::new("hello").as_str(),
             Ident::new(String::from("hello")).as_str()
         );
+    }
+}
+
+impl std::fmt::Display for TokenStream {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.as_str())
     }
 }

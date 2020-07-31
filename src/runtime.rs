@@ -178,31 +178,33 @@ impl<T: ToTokens> ToTokens for RepInterp<T> {
 }
 
 pub fn push_group(tokens: &mut TokenStream, delimiter: Delimiter, inner: TokenStream) {
+    tokens.push_space();
     tokens.push(delimiter.open());
     tokens.combine(&inner);
+    tokens.push_space();
     tokens.push(delimiter.close());
 }
 
 pub fn parse(tokens: &mut TokenStream, s: &str) {
-    tokens.push(' ');
+    tokens.push_space();
     tokens.push_str(s);
 }
 
 pub fn push_ident(tokens: &mut TokenStream, s: &str) {
-    tokens.push(' ');
+    tokens.push_space();
     tokens.push_str(s);
 }
 
 macro_rules! push_punct {
     ($name:ident $char1:tt) => {
         pub fn $name(tokens: &mut TokenStream) {
-            tokens.push(' ');
+            tokens.push_space();
             tokens.push($char1);
         }
     };
     ($name:ident $char1:tt $char2:tt) => {
         pub fn $name(tokens: &mut TokenStream) {
-            tokens.push(' ');
+            tokens.push_space();
             tokens.push($char1);
             tokens.push($char2);
         }

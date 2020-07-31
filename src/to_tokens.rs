@@ -88,8 +88,9 @@ macro_rules! primitive {
     ($($t:ident => $name:ident)*) => ($(
         impl ToTokens for $t {
             fn to_tokens(&self, tokens: &mut TokenStream) {
-                tokens.push(' ');
+                tokens.push_space();
                 tokens.push_str(&self.to_string());
+                tokens.push_str(stringify!($t));
             }
         }
     )*)
@@ -116,7 +117,7 @@ primitive! {
 
 impl ToTokens for char {
     fn to_tokens(&self, tokens: &mut TokenStream) {
-        tokens.push(' ');
+        tokens.push_space();
         tokens.push('\'');
         tokens.push(*self);
         tokens.push('\'');
@@ -126,23 +127,17 @@ impl ToTokens for char {
 impl ToTokens for bool {
     fn to_tokens(&self, tokens: &mut TokenStream) {
         let word = if *self { "true" } else { "false" };
-        tokens.push(' ');
+        tokens.push_space();
         tokens.push_str(word);
     }
 }
 
 impl ToTokens for Ident {
     fn to_tokens(&self, tokens: &mut TokenStream) {
-        tokens.push(' ');
+        tokens.push_space();
         tokens.push_str(self.as_str());
     }
 }
-
-// impl ToTokens for Punct {
-//     fn to_tokens(&self, tokens: &mut TokenStream) {
-//         tokens.append(self.clone());
-//     }
-// }
 
 impl ToTokens for Literal {
     fn to_tokens(&self, tokens: &mut TokenStream) {

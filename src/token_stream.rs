@@ -85,7 +85,7 @@ pub struct Ident {
 }
 
 impl Ident {
-    // Create a new `Identifier`
+    /// Create a new `Identifier`
     pub fn new<T: Into<Cow<'static, str>>>(str: T) -> Self {
         Self { inner: str.into() }
     }

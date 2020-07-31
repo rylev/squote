@@ -3,7 +3,10 @@ name = "squote"
 version = "0.1.0"
 authors = ["Ryan Levick <ryan.levick@gmail.com>"]
 edition = "2018"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+license = "MIT"
+description = "A clone of the quote crate that uses a String as its backing store"
+repository = "https://github.com/rylev/squote"
+documentation = "https://docs.rs/squote"
+readme = "README.md"
 
 [dependencies]

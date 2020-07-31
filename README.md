@@ -1,3 +1,7 @@
+[![crates.io](https://img.shields.io/crates/v/squote.svg)](https://crates.io/crates/squote)
+[![docs.rs](https://docs.rs/squote/badge.svg)](https://docs.rs/squote)
+[![Build and Test](https://github.com/rylev/squote/workflows/Build%20and%20Test/badge.svg?event=push)](https://github.com/rylev/squote/actions)
+
 # squote
 
 A string backed implementation of the popular [`quote`](https://github.com/dtolnay/quote) crate.

@@ -48,8 +48,9 @@ impl TokenStream {
     }
 
     pub(crate) fn push_space(&mut self) {
-        if !matches!(self.last_char(), None | Some(' ')) {
-            self.inner.push(' ');
+        match self.last_char() {
+            None | Some(' ') => {}
+            _ => self.inner.push(' '),
         }
     }
 

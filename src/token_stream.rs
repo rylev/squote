@@ -3,14 +3,14 @@ use std::borrow::Cow;
 /// A stream of tokens
 #[derive(Debug, Clone)]
 pub struct TokenStream {
-    inner: String,
+    inner: Cow<'static, str>,
 }
 
 impl TokenStream {
     /// Create a new `TokenStream`
     pub fn new() -> Self {
         Self {
-            inner: String::new(),
+            inner: Cow::Borrowed(""),
         }
     }
 
@@ -19,7 +19,7 @@ impl TokenStream {
     /// note: a space will be inserted before the identifier
     pub fn append(&mut self, ident: Ident) {
         self.push_space();
-        self.inner.push_str(ident.as_str())
+        self.inner.to_mut().push_str(ident.as_str())
     }
 
     /// Appends another stream to the stream
@@ -27,7 +27,7 @@ impl TokenStream {
     /// note: a space will be inserted before the other stream
     pub fn combine(&mut self, other: &TokenStream) {
         self.push_space();
-        self.inner.push_str(&other.inner)
+        self.inner.to_mut().push_str(&other.inner)
     }
 
     /// View the stream as a string
@@ -37,7 +37,7 @@ impl TokenStream {
 
     /// Convert the stream into a `String`
     pub fn into_string(self) -> String {
-        self.inner
+        self.inner.into_owned()
     }
 
     /// Parse the token stream as something
@@ -50,16 +50,24 @@ impl TokenStream {
     pub(crate) fn push_space(&mut self) {
         match self.last_char() {
             None | Some(' ') => {}
-            _ => self.inner.push(' '),
+            _ => self.inner.to_mut().push(' '),
         }
     }
 
     pub(crate) fn push(&mut self, c: char) {
-        self.inner.push(c)
+        self.inner.to_mut().push(c)
     }
 
     pub(crate) fn push_str(&mut self, str: &str) {
-        self.inner.push_str(str)
+        self.inner.to_mut().push_str(str)
+    }
+
+    pub(crate) fn push_static_str(&mut self, str: &'static str) {
+        if let Cow::Borrowed("") = &self.inner {
+            self.inner = Cow::Borrowed(str);
+            return;
+        }
+        self.push_str(str)
     }
 
     fn last_char(&self) -> Option<char> {

@@ -185,14 +185,14 @@ pub fn push_group(tokens: &mut TokenStream, delimiter: Delimiter, inner: TokenSt
     tokens.push(delimiter.close());
 }
 
-pub fn parse(tokens: &mut TokenStream, s: &str) {
+pub fn parse(tokens: &mut TokenStream, s: &'static str) {
     tokens.push_space();
-    tokens.push_str(s);
+    tokens.push_static_str(s);
 }
 
-pub fn push_ident(tokens: &mut TokenStream, s: &str) {
+pub fn push_ident(tokens: &mut TokenStream, s: &'static str) {
     tokens.push_space();
-    tokens.push_str(s);
+    tokens.push_static_str(s);
 }
 
 macro_rules! push_punct {
